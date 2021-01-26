@@ -1,4 +1,7 @@
 from datetime import date, timedelta
+import os
+
+FILE_LOCATION = os.getenv('LOCATION')
 
 
 class DateStamps():
@@ -27,3 +30,11 @@ class DateStamps():
 
     def __str__(self):
         return f'today is {self.time}'
+
+
+def folder_creation(location, date):
+    """Create a folder for all reports of the day"""
+    try:
+        os.mkdir(f'{location}/Daily_Report {DateStamps().get_today()}.xlsx')
+    except FileExistsError:
+        return 'File already created'
