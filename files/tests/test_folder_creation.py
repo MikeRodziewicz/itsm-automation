@@ -1,14 +1,18 @@
+import pytest
 import os
 from datetime import date, timedelta
 
 from files.folder_creation import DateStamps, folder_creation
 
-def test_class_init():
-    """Test is class initialization works"""
+@pytest.fixture(name="date_stamps")
+def fixture_date_stamps():
     date_stamps = DateStamps()
+    return date_stamps
+
+def test_class_init(date_stamps):
+    """Test is class initialization works"""
     assert date_stamps
 
-def test_getting_today():
+def test_getting_today(date_stamps):
     """Test if todays date is returned"""
-    date_stamps = DateStamps().get_today()
-    assert date_stamps == date.today()
+    assert date_stamps.get_today() == date.today()
