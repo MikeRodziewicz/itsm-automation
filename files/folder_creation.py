@@ -1,7 +1,12 @@
 from datetime import date, timedelta
 import os
+import shutil
+
+import pandas as pd
+
 
 FILE_LOCATION = os.getenv('LOCATION')
+TEMPLATE_LOCATION = os.getenv('LOCATION' + os.path.join('/templates'))
 
 
 class DateStamps():
@@ -32,9 +37,34 @@ class DateStamps():
         return f'today is {self.time}'
 
 
-def folder_creation(location, date):
+def _folder_creation(location):
     """Create a folder for all reports of the day"""
     try:
-        os.mkdir(f'{location}/Daily_Report {DateStamps().get_today()}.xlsx')
+        daily_folder = os.mkdir(f'{location}/Daily_Report {DateStamps().get_today()}.xlsx')
+        return daily_folder
     except FileExistsError:
         return 'File already created'
+
+def _copy_excel_templates():
+    """Copy files for excel data insert"""
+    for template in TEMPLATE_LOCATION:
+        shutil.copy2(template, _folder_creation(FILE_LOCATION))
+    
+ #TODO think about naming convention for templates   
+def _rename_folders():
+    """Renames copied templated with the datestamp"""
+    os.rename(
+        f'{FILE_LOCATION}/daily_template.xlsx',
+        f'{FILE_LOCATION}/CSAT Daily HS {DateStamps().get_yesterday()}.xlsx', )
+    os.rename(
+        f'{FILE_LOCATION}/report_maker.xlsx',
+        f'{FILE_LOCATION}/report_maker {DateStamps().get_today()}.xlsx',)
+
+def prepare_reports():
+    _folder_creation(FILE_LOCATION)
+    _copy_excel_templates()
+    _rename_folders()
+    print('Folders created')
+
+
+    
