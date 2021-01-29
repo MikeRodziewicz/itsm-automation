@@ -2,7 +2,6 @@ from datetime import date, timedelta
 import os
 import shutil
 
-import pandas as pd
 
 
 FILE_LOCATION = os.getenv('LOCATION')
@@ -51,7 +50,7 @@ def _copy_excel_templates():
         shutil.copy2(template, _folder_creation(FILE_LOCATION))
     
  #TODO think about naming convention for templates   
-def _rename_folders():
+def _rename_folders_daily():
     """Renames copied templated with the datestamp"""
     os.rename(
         f'{FILE_LOCATION}/daily_template.xlsx',
@@ -60,11 +59,26 @@ def _rename_folders():
         f'{FILE_LOCATION}/report_maker.xlsx',
         f'{FILE_LOCATION}/report_maker {DateStamps().get_today()}.xlsx',)
 
+def _rename_folders_weekly():
+    """Rename for the weekly report"""
+    os.rename(
+        f'{FILE_LOCATION}/Weekly_template.xlsx',
+        f'{FILE_LOCATION}/CSAT Weekly HS {DateStamps().get_yesterday()}.xlsx', )
+
+def _rename_folders_monthly():
+    """Rename for the weekly report"""
+    os.rename(
+        f'{FILE_LOCATION}/Monthly_template.xlsx',
+        f'{FILE_LOCATION}/CSAT Monthly HS {DateStamps().get_yesterday()}.xlsx', )
+
+
 def prepare_reports():
     _folder_creation(FILE_LOCATION)
     _copy_excel_templates()
-    _rename_folders()
-    print('Folders created')
+    _rename_folders_daily()
+    if DateStamps().time.isoweekday() == 1:
+        _rename_folders_weekly()
+
 
 
     
