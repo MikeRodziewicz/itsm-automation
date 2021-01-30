@@ -2,7 +2,7 @@ import pytest
 import os
 from datetime import date, timedelta
 
-from files.folder_creation import DateStamps, folder_creation
+from files.folder_creation import DateStamps, _folder_creation
 
 @pytest.fixture(name="date_stamps")
 def fixture_date_stamps():

@@ -3,7 +3,6 @@ import os
 import shutil
 
 
-
 FILE_LOCATION = os.getenv('LOCATION')
 TEMPLATE_LOCATION = os.getenv('LOCATION' + os.path.join('/templates'))
 
