@@ -1,5 +1,5 @@
 import pandas as pd
-from files.folder_creation import DateStamps
+from folder_creation import DateStamps
 
 
 def _make_stp_map_df():

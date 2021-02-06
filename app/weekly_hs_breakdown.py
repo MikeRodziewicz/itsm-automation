@@ -1,8 +1,7 @@
-import pandas as pd
-from files.folder_creation import DateStamps
-from daily_report_hs import _combine_hs_and_stp
 from collections import Counter
-
+import pandas as pd
+from folder_creation import DateStamps
+from daily_report_hs import _combine_hs_and_stp
 
 def _create_weekly_hs_base():
     """Create base dframe for weekly breakdown"""
@@ -32,15 +31,13 @@ def create_hs_breakdown(base_dframe):
 
     return hs_negative, hs_neutral, hs_positive
 
-#TODO Try to separate comments count 
-
 def _string_splitter(category_dframe):
     """Read dframe for category to get a list of factors"""
     cat_dframe = category_dframe[category_dframe['Factor'].notnull()]
     list_of_factors = cat_dframe['Factor'].tolist()
     split_list_factors = []
     for item in list_of_factors:
-        split_list_factors.extend(item.split(', '))            
+        split_list_factors.extend(item.split(', '))
     return split_list_factors
 
 def _factor_counter(splitted_list):
@@ -54,9 +51,3 @@ def create_factor_breakdown(counted_factor_list):
         splitted = _string_splitter(counted_list)
         counted = _factor_counter(splitted)
     return counted
-
-
-
-
-#TODO analyze top offenders for each category
-#TODO calculate avarage for the week 

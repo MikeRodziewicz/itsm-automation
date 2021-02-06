@@ -70,7 +70,6 @@ def _rename_folders_monthly():
         f'{FILE_LOCATION}/Monthly_template.xlsx',
         f'{FILE_LOCATION}/CSAT Monthly HS {DateStamps().get_yesterday()}.xlsx', )
 
-
 def prepare_reports():
     _folder_creation(FILE_LOCATION)
     _copy_excel_templates()
@@ -79,5 +78,3 @@ def prepare_reports():
         _rename_folders_weekly()
 
 
-
-    
