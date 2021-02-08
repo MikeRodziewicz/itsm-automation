@@ -1,65 +1,35 @@
+
 import os 
-
-from openpyxl import load_workbook
-import pandas as pd
-
 from collections import Counter
+import pandas as pd
+from pandas import ExcelWriter
+from daily_report_hs import _read_hs_daily_data
 
+FILE_LOCATION = os.getenv('LOCATION')
 
-location = f'C:/Users/mrodziew/OneDrive - Capgemini/Documents/1. AWS/1. Reports/5. Data Analysis'
-dst = f'C:/Users/mrodziew/OneDrive - Capgemini/Documents/1. AWS/1. Reports/5. Data Analysis'
+def _inc_req_divide(base_dframe):
+    """Func to separate req and inc into two Series"""
+    base_dframe = base_dframe[['Ticket', 'Ticket Type']]
+    inident_dframe = base_dframe.loc[base_dframe['Ticket Type'] == 'Incident']
+    request_dframe = base_dframe.loc[base_dframe['Ticket Type'] == 'Request']
+    return inident_dframe, request_dframe
 
-def inc_search():
-    """search string from the INC numbers into txt file"""
-    try:
-        wb = load_workbook(f'{location}/incs.xlsx')
-        ws_inc = wb['INC']
-        with open(f"{dst}/INC.txt", 'w') as inc_txt:
-            for row in ws_inc.rows:
-                for cell in row:
-                    inc_txt.write(f"""'Incident ID*+' = "{cell.value}" OR """)
-            inc_txt.seek(0, 2)
-            inc_txt.seek(inc_txt.tell() - 3, 0)
-            inc_txt.truncate()
-    except FileNotFoundError:
-        print('no such file')
+def write_search_strings():
+    """Func to wrtie itsm searches for inc and req"""
+    inc, req = _inc_req_divide(_read_hs_daily_data())
+    inc_list = list(inc['Ticket'].values.flatten())
+    req_list = list(req['Ticket'].values.flatten())
 
-
-def wo_search():
-    """search string from the REQ numbers into txt file"""
-    try:
-        wb = load_workbook(f'{location}/wos.xlsx')
-        ws_inc = wb['WO']
-        with open(f"{dst}/WO.txt", 'w') as inc_txt:
-            for row in ws_inc.rows:
-                for cell in row:
-                    inc_txt.write(f"""'Associated Request ID' = "{cell.value}" OR """)
-            inc_txt.seek(0, 2)
-            inc_txt.seek(inc_txt.tell() - 3, 0)
-            inc_txt.truncate()
-    except FileNotFoundError:
-        print('no such file')
-
-
-def inc_wo_req_search():
-    """search from req_inc and req_wo numbers into txt files"""
-    wb = load_workbook(f"{location}/data.xlsx")
-    ws_inc = wb['INC']
-    ws_wo = wb['WO']
-    with open(f"{dst}/INC.txt", 'w') as inc_txt:
-        for row in ws_inc.rows:
-            for cell in row:
-                inc_txt.write(f"""'Service Request ID' = "{cell.value}" OR """)
-
+    with open(f'{FILE_LOCATION}/inc_search.txt') as inc_txt:
+        for reference in inc_list:
+            inc_txt.write(f"""'Associated Request ID' = "{cell.value}" OR """)
         inc_txt.seek(0, 2)
         inc_txt.seek(inc_txt.tell() - 3, 0)
         inc_txt.truncate()
 
-    with open(f"{dst}/WO.txt", 'w') as wo_txt:
-        for row in ws_wo.rows:
-            for cell in row:
-                wo_txt.write(f"""'Associated Request ID' = "{cell.value}" OR """)
-
+    with open(f'{FILE_LOCATION}/req_search.txt') as req_txt:
+        for reference in req_list:
+             req_txt.write(f"""'Service Request ID' = "{cell.value}" OR """)
         wo_txt.seek(0,2)
         wo_txt.seek(wo_txt.tell() -3,0)
         wo_txt.truncate()

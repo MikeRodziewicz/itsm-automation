@@ -49,6 +49,7 @@ def _copy_excel_templates():
         shutil.copy2(template, _folder_creation(FILE_LOCATION))
     
  #TODO think about naming convention for templates   
+
 def _rename_folders_daily():
     """Renames copied templated with the datestamp"""
     os.rename(

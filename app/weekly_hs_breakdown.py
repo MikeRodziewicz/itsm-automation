@@ -1,3 +1,4 @@
+# %%
 from collections import Counter
 import pandas as pd
 from folder_creation import DateStamps
@@ -51,3 +52,4 @@ def create_factor_breakdown(counted_factor_list):
         splitted = _string_splitter(counted_list)
         counted = _factor_counter(splitted)
     return counted
+
